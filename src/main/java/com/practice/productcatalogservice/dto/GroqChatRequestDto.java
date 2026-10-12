@@ -1,7 +1,15 @@
 package com.practice.productcatalogservice.dto;
 
-public class GroqChatCompletionRequestDto {
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
+
+@Getter
+@Setter
+public class GroqChatRequestDto {
     private String model;
     private String reasoning_effort;
-    private String 
+    private int max_completion_tokens;
+    private List<GroqChatMessageDto> messages;
 }
