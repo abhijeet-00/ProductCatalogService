@@ -4,11 +4,14 @@ import com.practice.productcatalogservice.model.Category;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
-public class ProductResponseDto {
+public class ProductDto {
+    private Long id;
     private String name;
-    private double price;
+    private BigDecimal price;
     private String description;
-    private Category category;
+    private CategoryDto categoryDto;
 }

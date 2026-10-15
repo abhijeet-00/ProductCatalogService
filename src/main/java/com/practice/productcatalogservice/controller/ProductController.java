@@ -1,14 +1,15 @@
 package com.practice.productcatalogservice.controller;
 
-import com.practice.productcatalogservice.dto.ProductResponseDto;
+import com.practice.productcatalogservice.dto.CategoryDto;
+import com.practice.productcatalogservice.dto.ProductDto;
+import com.practice.productcatalogservice.model.Category;
 import com.practice.productcatalogservice.model.Product;
 import com.practice.productcatalogservice.service.IPitchService;
 import com.practice.productcatalogservice.service.IProductService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/products")
@@ -20,11 +21,14 @@ public class ProductController {
         this.iPitchService = iPitchService;
     }
     @GetMapping("/{id}")
-    public ResponseEntity<ProductResponseDto> getProductById(@PathVariable Long id) {
+    public ResponseEntity<ProductDto> getProductById(@PathVariable Long id) {
         if (id <= 0) {
             return ResponseEntity.badRequest().build();
         }
         Product product = iProductService.getProductById(id);
+        if (product == null) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(from(product));
     }
     @GetMapping("{id}/pitch")
@@ -33,15 +37,48 @@ public class ProductController {
             return ResponseEntity.badRequest().build();
         }
         Product product = iProductService.getProductById(id);
+        if (product == null) {
+            return ResponseEntity.notFound().build();
+        }
         String pitch = iPitchService.getPitch(product);
         return ResponseEntity.ok(pitch);
     }
-    private ProductResponseDto from(Product product) {
-        ProductResponseDto productResponseDto = new ProductResponseDto();
-        productResponseDto.setName(product.getName());
-        productResponseDto.setPrice(product.getPrice());
-        productResponseDto.setDescription(product.getDescription());
-        productResponseDto.setCategory(product.getCategory());
-        return productResponseDto;
+
+    @PostMapping
+    public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto) {
+        if (productDto.getName() == null || productDto.getPrice() == null || productDto.getDescription() == null || productDto.getCategoryDto() == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        Product product = iProductService.createProduct(productDto);
+        return new ResponseEntity<>(from(product), HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+        if (id <= 0) {
+            return ResponseEntity.badRequest().build();
+        }
+        boolean deleted = iProductService.deleteProduct(id);
+        if (!deleted) {
+            return ResponseEntity.notFound().build();
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    private ProductDto from(Product product) {
+        ProductDto productDto = new ProductDto();
+        productDto.setId(product.getId());
+        productDto.setName(product.getName());
+        productDto.setPrice(product.getPrice());
+        productDto.setDescription(product.getDescription());
+        productDto.setCategoryDto(fromCategory(product.getCategory()));
+        return productDto;
+    }
+    private CategoryDto fromCategory(Category category) {
+        CategoryDto categoryDto = new CategoryDto();
+        categoryDto.setId(category.getId());
+        categoryDto.setName(category.getName());
+        categoryDto.setDescription(category.getDescription());
+        return categoryDto;
     }
 }
