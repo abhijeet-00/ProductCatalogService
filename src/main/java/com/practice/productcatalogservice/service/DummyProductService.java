@@ -79,6 +79,11 @@ public class DummyProductService implements IProductService {
         return null;
     }
 
+    @Override
+    public List<Product> findAllProducts() {
+        return List.of();
+    }
+
     private Product convertToProduct(DummyProductServiceDto dummyProductServiceDto) {
         Product product = new Product();
         product.setName(dummyProductServiceDto.getTitle());

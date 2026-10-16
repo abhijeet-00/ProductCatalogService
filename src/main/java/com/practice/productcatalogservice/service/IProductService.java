@@ -15,4 +15,6 @@ public interface IProductService {
     Product updateProduct(ProductDto productDto);
     int loadAllProducts();
     Page<Product> getAllProducts(Pageable pageable);
+    List<Product> findAllProducts();
+
 }

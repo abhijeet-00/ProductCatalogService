@@ -101,10 +101,16 @@ public class ProductController {
         return new ResponseEntity<>("Average price for category " + categoryName + " is: " + avgPrice, HttpStatus.OK);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/paged/all")
     public ResponseEntity<PagedModel<ProductDto>> getAllProductsPagedData(Pageable pageable) {
         Page<ProductDto> products = iProductService.getAllProducts(pageable).map(this::from);
         return new ResponseEntity<>(new PagedModel<>(products), HttpStatus.OK);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<ProductDto>> findAllProducts() {
+        List<ProductDto> productDtos = iProductService.findAllProducts().stream().map(this::from).toList();
+        return new ResponseEntity<>(productDtos, HttpStatus.OK);
     }
 
     private ProductDto from(Product product) {

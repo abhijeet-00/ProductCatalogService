@@ -103,6 +103,11 @@ public class ProductInventoryService implements IProductService{
         return productRepository.findByState(State.ACTIVE, pageable);
     }
 
+    @Override
+    public List<Product> findAllProducts() {
+        return productRepository.findAllProducts();
+    }
+
     private Product from(ProductDto productDto) {
         Product product = new Product();
         product.setName(productDto.getName());
