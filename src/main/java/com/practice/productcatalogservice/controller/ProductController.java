@@ -113,6 +113,15 @@ public class ProductController {
         return new ResponseEntity<>(productDtos, HttpStatus.OK);
     }
 
+    @GetMapping("/price")
+    public ResponseEntity<List<ProductDto>> findProductsBetweenMinAndMaxPrice(
+            @RequestParam BigDecimal minPrice,
+            @RequestParam BigDecimal maxPrice) {
+        List<Product> products = iProductService.findProductsBetweenMinAndMaxPrice(minPrice, maxPrice);
+        List<ProductDto> productDtos = products.stream().map(this::from).toList();
+        return new ResponseEntity<>(productDtos, HttpStatus.OK);
+    }
+
     private ProductDto from(Product product) {
         ProductDto productDto = new ProductDto();
         productDto.setId(product.getId());

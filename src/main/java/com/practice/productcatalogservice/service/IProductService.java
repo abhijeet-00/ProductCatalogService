@@ -5,6 +5,7 @@ import com.practice.productcatalogservice.model.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface IProductService {
@@ -16,5 +17,5 @@ public interface IProductService {
     int loadAllProducts();
     Page<Product> getAllProducts(Pageable pageable);
     List<Product> findAllProducts();
-
+    List<Product> findProductsBetweenMinAndMaxPrice(BigDecimal minPrice, BigDecimal maxPrice);
 }

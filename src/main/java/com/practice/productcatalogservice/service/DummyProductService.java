@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -81,6 +82,11 @@ public class DummyProductService implements IProductService {
 
     @Override
     public List<Product> findAllProducts() {
+        return List.of();
+    }
+
+    @Override
+    public List<Product> findProductsBetweenMinAndMaxPrice(BigDecimal minPrice, BigDecimal maxPrice) {
         return List.of();
     }
 

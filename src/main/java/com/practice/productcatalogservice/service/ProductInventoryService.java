@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -106,6 +107,11 @@ public class ProductInventoryService implements IProductService{
     @Override
     public List<Product> findAllProducts() {
         return productRepository.findAllProducts();
+    }
+
+    @Override
+    public List<Product> findProductsBetweenMinAndMaxPrice(BigDecimal minPrice, BigDecimal maxPrice) {
+        return productRepository.findByPriceBetween(minPrice, maxPrice);
     }
 
     private Product from(ProductDto productDto) {
