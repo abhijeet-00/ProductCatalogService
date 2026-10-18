@@ -1,6 +1,5 @@
 package com.practice.productcatalogservice.service;
 
-import com.practice.productcatalogservice.dto.CategoryDto;
 import com.practice.productcatalogservice.dto.DummyAllProductsDto;
 import com.practice.productcatalogservice.dto.DummyProductServiceDto;
 import com.practice.productcatalogservice.dto.ProductDto;
@@ -10,16 +9,13 @@ import com.practice.productcatalogservice.model.State;
 import com.practice.productcatalogservice.repository.CategoryRepository;
 import com.practice.productcatalogservice.repository.ProductRepository;
 import org.springframework.boot.restclient.RestTemplateBuilder;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
