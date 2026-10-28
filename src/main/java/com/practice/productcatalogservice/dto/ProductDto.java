@@ -1,6 +1,5 @@
 package com.practice.productcatalogservice.dto;
 
-import com.practice.productcatalogservice.model.Category;
 import lombok.Getter;
 import lombok.Setter;
 
