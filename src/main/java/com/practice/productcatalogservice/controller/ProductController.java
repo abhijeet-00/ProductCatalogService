@@ -118,6 +118,10 @@ public class ProductController {
         List<ProductDto> productDtos = products.stream().map(this::from).toList();
         return new ResponseEntity<>(productDtos, HttpStatus.OK);
     }
+    @GetMapping("/health")
+    public ResponseEntity<String> getHealth() {
+        return new ResponseEntity<>("Service is running", HttpStatus.OK);
+    }
 
     private ProductDto from(Product product) {
         ProductDto productDto = new ProductDto();
