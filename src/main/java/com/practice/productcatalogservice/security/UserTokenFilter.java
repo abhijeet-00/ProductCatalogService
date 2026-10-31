@@ -5,6 +5,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
@@ -18,8 +19,11 @@ import java.io.IOException;
 @Component
 public class UserTokenFilter extends OncePerRequestFilter {
     private final RestTemplate restTemplate;
+    private final String authServiceUrl;
 
-    public UserTokenFilter(RestTemplateBuilder restTemplateBuilder) {
+    public UserTokenFilter(RestTemplateBuilder restTemplateBuilder,
+                           @Value("${auth.service.url}") String authServiceUrl) {
+        this.authServiceUrl = authServiceUrl;
         restTemplate = restTemplateBuilder.build();
     }
     @Override
@@ -35,7 +39,6 @@ public class UserTokenFilter extends OncePerRequestFilter {
                 HttpHeaders headers = new HttpHeaders();
                 headers.setBearerAuth(token);
                 HttpEntity<Void> entity = new HttpEntity<>(headers);
-                String authServiceUrl = "http://localhost:8080/users/me";
                 ResponseEntity<UserDto> userDto = restTemplate.exchange(authServiceUrl, HttpMethod.GET, entity, UserDto.class);
                 if (userDto.getBody() != null && request.getMethod().equals(HttpMethod.DELETE.name())
                         && !userDto.getBody().getRole().equals("ADMIN")) {
