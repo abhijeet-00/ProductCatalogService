@@ -110,8 +110,8 @@ public class ProductInventoryService implements IProductService{
     }
 
     @Override
-    public List<Product> findProductsBetweenMinAndMaxPrice(BigDecimal minPrice, BigDecimal maxPrice) {
-        return productRepository.findByPriceBetween(minPrice, maxPrice);
+    public Page<Product> findProductsBetweenMinAndMaxPrice(BigDecimal minPrice, BigDecimal maxPrice, Pageable pageable) {
+        return productRepository.findByPriceBetween(minPrice, maxPrice, pageable);
     }
 
     private Product from(ProductDto productDto) {

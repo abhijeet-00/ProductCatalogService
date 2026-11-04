@@ -18,5 +18,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = "Select p from Product p LEFT JOIN FETCH p.category c")
     List<Product> findAllProducts();
     @EntityGraph(attributePaths = "category")
-    List<Product> findByPriceBetween(BigDecimal minPrice, BigDecimal maxPrice);
+    Page<Product> findByPriceBetween(BigDecimal minPrice, BigDecimal maxPrice, Pageable pageable);
 }

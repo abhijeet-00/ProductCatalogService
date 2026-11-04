@@ -110,13 +110,13 @@ public class ProductController {
         return new ResponseEntity<>(productDtos, HttpStatus.OK);
     }
 
-    @GetMapping("/price")
-    public ResponseEntity<List<ProductDto>> findProductsBetweenMinAndMaxPrice(
+    @GetMapping("/search")
+    public ResponseEntity<PagedModel<ProductDto>> findProductsBetweenMinAndMaxPrice(
             @RequestParam BigDecimal minPrice,
-            @RequestParam BigDecimal maxPrice) {
-        List<Product> products = iProductService.findProductsBetweenMinAndMaxPrice(minPrice, maxPrice);
-        List<ProductDto> productDtos = products.stream().map(this::from).toList();
-        return new ResponseEntity<>(productDtos, HttpStatus.OK);
+            @RequestParam BigDecimal maxPrice, Pageable pageable) {
+        Page<Product> products = iProductService.findProductsBetweenMinAndMaxPrice(minPrice, maxPrice, pageable);
+        Page<ProductDto> productDtos = products.map(this::from);
+        return new ResponseEntity<>(new PagedModel<>(productDtos), HttpStatus.OK);
     }
     @GetMapping("/health")
     public ResponseEntity<String> getHealth() {

@@ -17,5 +17,5 @@ public interface IProductService {
     int loadAllProducts();
     Page<Product> getAllProducts(Pageable pageable);
     List<Product> findAllProducts();
-    List<Product> findProductsBetweenMinAndMaxPrice(BigDecimal minPrice, BigDecimal maxPrice);
+    Page<Product> findProductsBetweenMinAndMaxPrice(BigDecimal minPrice, BigDecimal maxPrice, Pageable pageable);
 }

@@ -82,8 +82,8 @@ public class DummyProductService implements IProductService {
     }
 
     @Override
-    public List<Product> findProductsBetweenMinAndMaxPrice(BigDecimal minPrice, BigDecimal maxPrice) {
-        return List.of();
+    public Page<Product> findProductsBetweenMinAndMaxPrice(BigDecimal minPrice, BigDecimal maxPrice, Pageable pageable) {
+        return Page.empty();
     }
 
     private Product convertToProduct(DummyProductServiceDto dummyProductServiceDto) {
