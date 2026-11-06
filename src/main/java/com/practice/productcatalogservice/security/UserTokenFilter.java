@@ -1,30 +1,26 @@
 package com.practice.productcatalogservice.security;
 
+import com.practice.productcatalogservice.clients.UserAuthClient;
 import com.practice.productcatalogservice.dto.UserDto;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.restclient.RestTemplateBuilder;
-import org.springframework.http.*;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
 @Component
 public class UserTokenFilter extends OncePerRequestFilter {
-    private final RestTemplate restTemplate;
-    private final String authServiceUrl;
+    private final UserAuthClient userAuthClient;
 
-    public UserTokenFilter(RestTemplateBuilder restTemplateBuilder,
-                           @Value("${auth.service.url}") String authServiceUrl) {
-        this.authServiceUrl = authServiceUrl;
-        restTemplate = restTemplateBuilder.build();
+    public UserTokenFilter(UserAuthClient userAuthClient) {
+        this.userAuthClient = userAuthClient;
     }
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -36,12 +32,9 @@ public class UserTokenFilter extends OncePerRequestFilter {
         if (authorization != null && authorization.startsWith("Bearer")) {
             try {
                 String token = authorization.substring(7);
-                HttpHeaders headers = new HttpHeaders();
-                headers.setBearerAuth(token);
-                HttpEntity<Void> entity = new HttpEntity<>(headers);
-                ResponseEntity<UserDto> userDto = restTemplate.exchange(authServiceUrl, HttpMethod.GET, entity, UserDto.class);
-                if (userDto.getBody() != null && request.getMethod().equals(HttpMethod.DELETE.name())
-                        && !userDto.getBody().getRole().equals("ADMIN")) {
+                UserDto userDto = userAuthClient.getUser(token);
+                if (userDto != null && request.getMethod().equals(HttpMethod.DELETE.name())
+                        && !userDto.getRole().equals("ADMIN")) {
                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                     response.getWriter().write("You are not authorized to delete products.");
                     return;

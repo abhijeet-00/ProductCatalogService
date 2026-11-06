@@ -1,41 +1,26 @@
 package com.practice.productcatalogservice.service;
 
+import com.practice.productcatalogservice.clients.GroqClient;
 import com.practice.productcatalogservice.dto.GroqChatMessageDto;
 import com.practice.productcatalogservice.dto.GroqChatRequestDto;
-import com.practice.productcatalogservice.dto.GroqChatResponseDto;
 import com.practice.productcatalogservice.model.Product;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.restclient.RestTemplateBuilder;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 @Service
+@RequiredArgsConstructor
 public class GroqPitchService implements IPitchService {
-    private final RestTemplate restTemplate;
-    private static final String GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
-    private final String GROQ_API_KEY;
-
-    public GroqPitchService(RestTemplateBuilder restTemplateBuilder, @Value("${groq.api.key}") String groqApiKey) {
-        GROQ_API_KEY = groqApiKey;
-        restTemplate = restTemplateBuilder.build();
-    }
+    private final GroqClient groqClient;
 
     @Override
     public String getPitch(Product product) {
         GroqChatRequestDto requestDto = getGroqChatRequestDto();
         requestDto.getMessages().add(new GroqChatMessageDto("user", String.format("Write a short headline to display on UI for the following product: %s. The product is described as: %s. The price is $%.2f.", product.getName(), product.getDescription(), product.getPrice())));
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setBearerAuth(GROQ_API_KEY);
-        HttpEntity<GroqChatRequestDto> requestEntity = new HttpEntity<>(requestDto, httpHeaders);
         try {
-            ResponseEntity<GroqChatResponseDto> response = restTemplate.postForEntity(GROQ_URL, requestEntity, GroqChatResponseDto.class);
-            return response != null ? response.getBody().getChoices().get(0).getMessage().getContent() : getDefaultPitch(product);
+            return groqClient.getPitch(requestDto);
         } catch (Exception e) {
             e.printStackTrace();
             return getDefaultPitch(product);

@@ -1,6 +1,6 @@
 package com.practice.productcatalogservice.service;
 
-import com.practice.productcatalogservice.dto.DummyAllProductsDto;
+import com.practice.productcatalogservice.clients.DummyClient;
 import com.practice.productcatalogservice.dto.DummyProductServiceDto;
 import com.practice.productcatalogservice.dto.ProductDto;
 import com.practice.productcatalogservice.model.Category;
@@ -8,33 +8,25 @@ import com.practice.productcatalogservice.model.Product;
 import com.practice.productcatalogservice.model.State;
 import com.practice.productcatalogservice.repository.CategoryRepository;
 import com.practice.productcatalogservice.repository.ProductRepository;
-import org.springframework.boot.restclient.RestTemplateBuilder;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class DummyProductService implements IProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
-    private RestTemplate restTemplate;
-
-    public DummyProductService(RestTemplateBuilder builder, ProductRepository productRepository, CategoryRepository categoryRepository) {
-        this.restTemplate = builder.build();
-        this.productRepository = productRepository;
-        this.categoryRepository = categoryRepository;
-    }
+    private final DummyClient dummyClient;
 
     @Override
     public Product getProductById(Long id) {
-        ResponseEntity<DummyProductServiceDto> response = restTemplate.getForEntity("https://dummyjson.com/products/{id}", DummyProductServiceDto.class, id);
-        return convertToProduct(response.getBody());
+        return convertToProduct(dummyClient.getProduct(id));
     }
 
 
@@ -60,13 +52,10 @@ public class DummyProductService implements IProductService {
 
     @Override
     public int loadAllProducts() {
-        ResponseEntity<DummyAllProductsDto> response = restTemplate.getForEntity("https://dummyjson.com/products?limit=0", DummyAllProductsDto.class);
         int count = 0;
-        if (response.getBody() != null) {
-            for (DummyProductServiceDto dummyProductServiceDto : response.getBody().getProducts()) {
-                productRepository.save(convertToProduct(dummyProductServiceDto));
-                count++;
-            }
+        for (DummyProductServiceDto dummyProductServiceDto : dummyClient.getAllProducts()) {
+            productRepository.save(convertToProduct(dummyProductServiceDto));
+            count++;
         }
         return count;
     }
