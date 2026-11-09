@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/products")
@@ -30,10 +31,7 @@ public class ProductController {
         this.iCategoryService = iCategoryService;
     }
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDto> getProductById(@PathVariable Long id) {
-        if (id <= 0) {
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<ProductDto> getProductById(@PathVariable UUID id) {
         Product product = iProductService.getProductById(id);
         if (product == null) {
             return ResponseEntity.notFound().build();
@@ -41,10 +39,7 @@ public class ProductController {
         return ResponseEntity.ok(from(product));
     }
     @GetMapping("{id}/pitch")
-    public ResponseEntity<String> getProductPitch(@PathVariable Long id) {
-        if (id <= 0) {
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<String> getProductPitch(@PathVariable UUID id) {
         Product product = iProductService.getProductById(id);
         if (product == null) {
             return ResponseEntity.notFound().build();
@@ -63,10 +58,7 @@ public class ProductController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-        if (id <= 0) {
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<Void> deleteProduct(@PathVariable UUID id) {
         boolean deleted = iProductService.deleteProduct(id);
         if (!deleted) {
             return ResponseEntity.notFound().build();

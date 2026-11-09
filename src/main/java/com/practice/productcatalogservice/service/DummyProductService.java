@@ -19,7 +19,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class DummyProductService implements IProductService {
+public class DummyProductService implements IDummyProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final DummyClient dummyClient;
@@ -30,22 +30,18 @@ public class DummyProductService implements IProductService {
     }
 
 
-    @Override
     public Product createProduct(ProductDto productDto) {
         return null;
     }
 
-    @Override
     public boolean deleteProduct(Long id) {
         return false;
     }
 
-    @Override
     public Product replaceProduct(ProductDto productDto) {
         return null;
     }
 
-    @Override
     public Product updateProduct(ProductDto productDto) {
         return null;
     }
@@ -60,17 +56,14 @@ public class DummyProductService implements IProductService {
         return count;
     }
 
-    @Override
     public Page<Product> getAllProducts(Pageable pageable) {
         return null;
     }
 
-    @Override
     public List<Product> findAllProducts() {
         return List.of();
     }
 
-    @Override
     public Page<Product> findProductsBetweenMinAndMaxPrice(BigDecimal minPrice, BigDecimal maxPrice, Pageable pageable) {
         return Page.empty();
     }

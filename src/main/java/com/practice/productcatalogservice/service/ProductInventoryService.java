@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Primary
@@ -28,7 +29,7 @@ public class ProductInventoryService implements IProductService{
     }
 
     @Override
-    public Product getProductById(Long id) {
+    public Product getProductById(UUID id) {
         return productRepository.findByIdAndState(id, State.ACTIVE).orElse(null);
     }
 
@@ -43,7 +44,7 @@ public class ProductInventoryService implements IProductService{
     }
 
     @Override
-    public boolean deleteProduct(Long id) {
+    public boolean deleteProduct(UUID id) {
         Product product = productRepository.findById(id).orElse(null);
         if (product != null) {
             product.setState(State.INACTIVE);

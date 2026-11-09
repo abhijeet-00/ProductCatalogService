@@ -6,8 +6,9 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.math.BigDecimal;
 import java.util.Optional;
+import java.util.UUID;
 
-public interface CategoryRepository extends JpaRepository<Category, Long> {
+public interface CategoryRepository extends JpaRepository<Category, UUID> {
     Optional<Category> findByName(String name);
     @Query(value = "Select AVG(p.price) from Product p where p.category.name = :name")
     BigDecimal getAvgPriceByCategory(String name);

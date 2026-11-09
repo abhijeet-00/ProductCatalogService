@@ -11,9 +11,10 @@ import org.springframework.data.jpa.repository.Query;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
-public interface ProductRepository extends JpaRepository<Product, Long> {
-    Optional<Product> findByIdAndState(Long id, State state);
+public interface ProductRepository extends JpaRepository<Product, UUID> {
+    Optional<Product> findByIdAndState(UUID id, State state);
     Page<Product> findByState(State state, Pageable pageable);
     @Query(value = "Select p from Product p LEFT JOIN FETCH p.category c")
     List<Product> findAllProducts();

@@ -2,7 +2,7 @@ package com.practice.productcatalogservice.controller;
 
 import com.practice.productcatalogservice.dto.ProductDto;
 import com.practice.productcatalogservice.model.Product;
-import com.practice.productcatalogservice.service.IProductService;
+import com.practice.productcatalogservice.service.IDummyProductService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/internal/products")
 public class InternalProductController {
-    private final IProductService iProductServiceExternal;
+    private final IDummyProductService iProductServiceExternal;
 
-    public InternalProductController(@Qualifier("dummyProductService") IProductService iProductServiceExternal) {
+    public InternalProductController(@Qualifier("dummyProductService") IDummyProductService iProductServiceExternal) {
         this.iProductServiceExternal = iProductServiceExternal;
     }
     @PostMapping("/load")
