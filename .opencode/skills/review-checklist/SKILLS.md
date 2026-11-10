@@ -5,3 +5,4 @@ description: Our team checklist for reviewing a change in the catalog service. U
 - Every new rule has a unit test that fails without the code.
 - A missing product answers 404, not 500 and not null.
 - No new dependency in pom.xml unless it was asked for.
+- Every new change must follow existing code base standards
