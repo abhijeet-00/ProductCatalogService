@@ -80,6 +80,11 @@ public class ProductInventoryService implements IProductService{
             }
             if (productDto.getCategoryDto() != null) {
                 Category category = product.getCategory();
+                if (category == null) {
+                    category = new Category();
+                    category.setState(State.ACTIVE);
+                    category.setCreatedAt(new Date());
+                }
                 if (productDto.getCategoryDto().getName() != null) {
                     category.setName(productDto.getCategoryDto().getName());
                 }

@@ -73,7 +73,10 @@ public class DummyProductService implements IDummyProductService {
         product.setName(dummyProductServiceDto.getTitle());
         product.setDescription(dummyProductServiceDto.getDescription());
         product.setPrice(dummyProductServiceDto.getPrice());
-        product.setImageUrl(dummyProductServiceDto.getImages().get(0));
+        List<String> images = dummyProductServiceDto.getImages();
+        if (images != null && !images.isEmpty()) {
+            product.setImageUrl(images.get(0));
+        }
         product.setCategory(findOrCreateCategory(dummyProductServiceDto.getCategory()));
         product.setCreatedAt(new Date());
         product.setUpdatedAt(new Date());
