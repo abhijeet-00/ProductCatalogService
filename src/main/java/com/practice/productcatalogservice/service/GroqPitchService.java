@@ -5,11 +5,13 @@ import com.practice.productcatalogservice.dto.GroqChatMessageDto;
 import com.practice.productcatalogservice.dto.GroqChatRequestDto;
 import com.practice.productcatalogservice.model.Product;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class GroqPitchService implements IPitchService {
@@ -22,7 +24,7 @@ public class GroqPitchService implements IPitchService {
         try {
             return groqClient.getPitch(requestDto);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.warn("Groq pitch generation failed, falling back to default pitch: {}", e.getMessage());
             return getDefaultPitch(product);
         }
     }
