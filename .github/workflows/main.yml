@@ -27,6 +27,11 @@ jobs:
           java-version: '17'
           # Caches ~/.m2/repository keyed on pom.xml
           cache: maven
+      # Run the service unit tests (plain Mockito - no MySQL/DB required).
+      # Kept to an explicit class list because plain `mvn test` also runs
+      # ProductCatalogServiceApplicationTests, which boots the full context and needs MySQL.
+      - name: Run unit tests
+        run: bash ./mvnw -B -ntp test -Dtest='GroqPitchServiceTests,ProductInventoryServiceTests,DummyProductServiceTests,CategoryServiceTests'
       # Build the application using the Maven wrapper pinned in .mvn/wrapper
       - name: Build with Maven
         run: bash ./mvnw -B -ntp package -DskipTests
