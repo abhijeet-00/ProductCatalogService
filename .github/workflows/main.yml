@@ -27,11 +27,11 @@ jobs:
           java-version: '17'
           # Caches ~/.m2/repository keyed on pom.xml
           cache: maven
-      # Run the service unit tests (plain Mockito - no MySQL/DB required).
-      # Kept to an explicit class list because plain `mvn test` also runs
-      # ProductCatalogServiceApplicationTests, which boots the full context and needs MySQL.
+      # Run all unit tests except the context test, which boots the full Spring
+      # context (Flyway + MySQL) and cannot run on a bare CI runner.
+      # The `!` exclusion means new test classes are picked up automatically.
       - name: Run unit tests
-        run: bash ./mvnw -B -ntp test -Dtest='GroqPitchServiceTests,ProductInventoryServiceTests,DummyProductServiceTests,CategoryServiceTests'
+        run: bash ./mvnw -B -ntp test -Dtest='!ProductCatalogServiceApplicationTests'
       # Build the application using the Maven wrapper pinned in .mvn/wrapper
       - name: Build with Maven
         run: bash ./mvnw -B -ntp package -DskipTests
