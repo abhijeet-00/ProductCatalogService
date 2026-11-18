@@ -27,11 +27,10 @@ jobs:
           java-version: '17'
           # Caches ~/.m2/repository keyed on pom.xml
           cache: maven
-      # Run all unit tests except the context test, which boots the full Spring
-      # context (Flyway + MySQL) and cannot run on a bare CI runner.
-      # The `!` exclusion means new test classes are picked up automatically.
+      # Run the DB-free tests. Integration tests need a real MySQL instance, so they are
+      # excluded here and run manually from a terminal when needed.
       - name: Run unit tests
-        run: bash ./mvnw -B -ntp test -Dtest='!ProductCatalogServiceApplicationTests'
+        run: bash ./mvnw -B -ntp test -Dtest='!ProductCatalogServiceApplicationTests,!*IntegrationTests'
       # Build the application using the Maven wrapper pinned in .mvn/wrapper
       - name: Build with Maven
         run: bash ./mvnw -B -ntp package -DskipTests
