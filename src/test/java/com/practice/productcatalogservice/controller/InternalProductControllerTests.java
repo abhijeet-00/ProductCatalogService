@@ -1,6 +1,5 @@
 package com.practice.productcatalogservice.controller;
 
-import com.practice.productcatalogservice.clients.UserAuthClient;
 import com.practice.productcatalogservice.dto.UserDto;
 import com.practice.productcatalogservice.model.Category;
 import com.practice.productcatalogservice.model.Product;
