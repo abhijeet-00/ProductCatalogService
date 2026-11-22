@@ -1,12 +1,11 @@
 package com.practice.productcatalogservice.controller;
 
-import com.practice.productcatalogservice.dto.UserDto;
 import com.practice.productcatalogservice.model.Category;
 import com.practice.productcatalogservice.model.Product;
 import com.practice.productcatalogservice.service.IDummyProductService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -26,6 +25,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = InternalProductController.class)
+// Security (JWT resource server) is exercised by its own tests; here we only test the MVC layer.
+@AutoConfigureMockMvc(addFilters = false)
 public class InternalProductControllerTests {
     private static final String CATEGORY_NAME = "Beauty";
     private static final String BEARER_TOKEN = "Bearer test-token";
@@ -36,16 +37,6 @@ public class InternalProductControllerTests {
     // The controller injects this by @Qualifier("dummyProductService"), so the bean name must match.
     @MockitoBean(name = "dummyProductService")
     private IDummyProductService dummyProductService;
-    // UserTokenFilter is a Filter bean, so the MVC slice picks it up and needs this collaborator.
-    @MockitoBean
-    private UserAuthClient userAuthClient;
-
-    @BeforeEach
-    void stubAuthenticatedUser() {
-        UserDto admin = new UserDto();
-        admin.setRole("ADMIN");
-        when(userAuthClient.getUser("test-token")).thenReturn(admin);
-    }
 
     // ---------- GET /internal/products/{id} ----------
 
