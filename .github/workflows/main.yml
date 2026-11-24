@@ -42,30 +42,3 @@ jobs:
           name: artifact
           # Relative path to jar file
           path: target/ProductCatalogService-0.0.1-SNAPSHOT.jar
-
-  # Deploy's job
-  deploy:
-    # Depends on build's job
-    needs: build
-    name: Deploy to Elastic Beanstalk
-    # Will run steps on latest version of ubuntu
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - name: Download JAR
-        uses: actions/download-artifact@v4
-        with:
-          name: artifact
-          path: . # Explicitly forces it into the root workspace directory
-
-      - name: Deploy to EB
-        uses: einaregilsson/beanstalk-deploy@v22 # Updated to v22 for Node20/Java17 compatibility
-        with:
-          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          use_existing_version_if_available: true
-          application_name: shopnest-catalog
-          environment_name: Shopnest-catalog-env
-          version_label: shopnest-${{ github.sha }}-${{ github.run_number }} # Best practice for unique version labels
-          region: ap-southeast-2
-          deployment_package: ProductCatalogService-0.0.1-SNAPSHOT.jar
